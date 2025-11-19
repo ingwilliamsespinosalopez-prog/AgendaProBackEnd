@@ -1,36 +1,26 @@
 package org.example;
 
-
 import io.javalin.Javalin;
-import org.example.routers.*;
+import org.example.config.DBconfig;
+import org.example.config.Inicio;
 
 public class Main {
+
     public static void main(String[] args) {
-        Javalin app = Javalin.create().start("0.0.0.0", 7000);
+        Javalin app = Javalin.create(config -> {
+            config.bundledPlugins.enableCors(cors -> {
+                cors.addRule(rule -> rule.anyHost());
+            });
+        }).start(7001);
+
+        Inicio inicio = new Inicio(DBconfig.getDataSource());
 
 
+        inicio.inicioUsuario().register(app);
+        inicio.inicioCita().register(app);
+        Inicio.inicioPago().register(app);
+        inicio.inicioBlog().register(app);
 
-        app.before("/*", ctx -> {
-            String origin = ctx.header("Origin");
-            if (origin != null && (origin.contains("localhost") || origin.contains("127.0.0.1"))) {
-                ctx.header("Access-Control-Allow-Origin", origin);
-            } else {
-                ctx.header("Access-Control-Allow-Origin", "http://localhost");
-            }
-
-            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-            ctx.header("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, X-Requested-With, Cache-Control");
-            ctx.header("Access-Control-Allow-Credentials", "true");
-            ctx.header("Access-Control-Max-Age", "86400");
-
-            if ("OPTIONS".equals(ctx.method().toString())) {
-                ctx.status(204);
-                ctx.skipRemainingHandlers();
-            }
-        });
-        new RoutesUsuario().register(app);
-        RoutesCita.register(app);
-        new RoutePago().register(app);
-
+        System.out.println("🚀 API iniciada en http://localhost:7001");
     }
 }

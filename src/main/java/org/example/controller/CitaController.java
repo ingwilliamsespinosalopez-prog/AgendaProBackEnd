@@ -1,73 +1,79 @@
 package org.example.controller;
 
-import io.javalin.http.Handler;
+import io.javalin.http.Context;
+import io.javalin.http.ForbiddenResponse;
 import org.example.model.Cita;
 import org.example.service.CitaService;
-import java.util.Map;
+import java.util.List;
 
 public class CitaController {
 
-    private static final CitaService service = new CitaService();
+    private final CitaService service;
 
-    public static Handler crear = ctx -> {
-        Cita cita = ctx.bodyAsClass(Cita.class);
+    public CitaController(CitaService service) {
+        this.service = service;
+    }
 
-        Integer idGenerado = service.crearCita(cita);
-
-        if (idGenerado == null || idGenerado <= 0) {
-            ctx.json(Map.of("error", "Error al crear cita"));
-            return;
+    public void listarMisCitas(Context ctx) {
+        try {
+            Integer idCliente = ctx.attribute("usuarioId");
+            if (idCliente == null) {
+                throw new ForbiddenResponse("No autorizado");
+            }
+            List<Cita> citas = service.obtenerPorCliente(idCliente);
+            ctx.json(citas);
+        } catch (ForbiddenResponse e) {
+            ctx.status(403).json(e.getMessage());
+        } catch (Exception e) {
+            ctx.status(500).json("Error al listar citas: " + e.getMessage());
         }
+    }
 
-        ctx.json(Map.of(
-                "msg", "Cita creada exitosamente",
-                "idCita", idGenerado
-        ));
-    };
+    public void listarTodas(Context ctx) {
+        try {
+            List<Cita> citas = service.listarTodas();
+            ctx.json(citas);
+        } catch (Exception e) {
+            ctx.status(500).json("Error al listar citas: " + e.getMessage());
+        }
+    }
 
-    public static Handler listarPorCliente = ctx -> {
-        int idCliente = Integer.parseInt(ctx.pathParam("id"));
-        ctx.json(service.obtenerPorCliente(idCliente));
-    };
+    public void listarPorEstado(Context ctx) {
+        try {
+            String estadoParam = ctx.pathParam("estado");
+            int idEstado = Integer.parseInt(estadoParam);
+            List<Cita> citas = service.listarPorEstado(idEstado);
+            ctx.json(citas);
+        } catch (NumberFormatException e) {
+            ctx.status(400).json("Estado inválido");
+        } catch (Exception e) {
+            ctx.status(500).json("Error al listar citas por estado: " + e.getMessage());
+        }
+    }
 
-    public static Handler obtenerPorId = ctx -> {
-        int idCita = Integer.parseInt(ctx.pathParam("id"));
-        ctx.json(service.obtenerPorId(idCita));
-    };
+    public void listarPorCliente(Context ctx) {
+        try {
+            String clienteParam = ctx.pathParam("idCliente");
+            int idCliente = Integer.parseInt(clienteParam);
+            List<Cita> citas = service.obtenerPorCliente(idCliente);
+            ctx.json(citas);
+        } catch (NumberFormatException e) {
+            ctx.status(400).json("ID de cliente inválido");
+        } catch (Exception e) {
+            ctx.status(500).json("Error al listar citas del cliente: " + e.getMessage());
+        }
+    }
 
-    public static Handler actualizarEstado = ctx -> {
-        int idCita = Integer.parseInt(ctx.pathParam("id"));
-        Cita body = ctx.bodyAsClass(Cita.class);
-
-        boolean ok = service.actualizarEstado(idCita, body.getIdEstado());
-        ctx.json(ok ? Map.of("msg", "Estado actualizado") : Map.of("error", "Error"));
-    };
-
-    public static Handler marcarPagado = ctx -> {
-        int idCita = Integer.parseInt(ctx.pathParam("id"));
-        boolean ok = service.marcarPagado(idCita);
-        ctx.json(ok ? Map.of("msg", "Pago registrado") : Map.of("error", "Error"));
-    };
-
-    public static Handler cambiarEstado = ctx -> {
-        int idCita = Integer.parseInt(ctx.pathParam("id"));
-        Map<String, Object> body = ctx.bodyAsClass(Map.class);
-
-        String accion = body.get("accion").toString();
-
-        String mensaje = service.cambiarEstado(idCita, accion);
-
-        ctx.json(Map.of("status", "success", "message", mensaje));
-    };
-
-    public static Handler asignarAsesor = ctx -> {
-        int idCita = Integer.parseInt(ctx.pathParam("id"));
-        Map<String, Object> body = ctx.bodyAsClass(Map.class);
-
-        int idAsesor = Integer.parseInt(body.get("idAsesor").toString());
-
-        String mensaje = service.asignarAsesor(idCita, idAsesor);
-
-        ctx.json(Map.of("status", "success", "message", mensaje));
-    };
+    public void listarPorAsesor(Context ctx) {
+        try {
+            String asesorParam = ctx.pathParam("idAsesor");
+            int idAsesor = Integer.parseInt(asesorParam);
+            List<Cita> citas = service.listarPorAsesor(idAsesor);
+            ctx.json(citas);
+        } catch (NumberFormatException e) {
+            ctx.status(400).json("ID de asesor inválido");
+        } catch (Exception e) {
+            ctx.status(500).json("Error al listar citas del asesor: " + e.getMessage());
+        }
+    }
 }

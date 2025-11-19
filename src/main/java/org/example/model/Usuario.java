@@ -1,23 +1,24 @@
 package org.example.model;
 
 public class Usuario {
-    int idUsuario;
-    int idRol;
-    String nombreUsuario;
-    String nombre;
-    String apellido;
-    String segundoApellido;
-    String rfc;
-    String curp;
-    String genero;
-    String contrasena;
-    String correo;
-    String telefono;
-    String rutaImagen;
+
+    private int idUsuario;
+    private int idRol;
+    private String nombreUsuario;
+    private String nombre;
+    private String apellido;
+    private String segundoApellido;
+    private String rfc;
+    private String curp;
+    private String genero;
+    private String contrasena;
+    private String correo;
+    private String telefono;
+    private byte[] img;
 
     public Usuario() {}
 
-    public int getId() {
+    public int getIdUsuario() {
         return idUsuario;
     }
 
@@ -113,11 +114,11 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public String getRutaImagen() {
-        return rutaImagen;
+    public byte[] getImg() {
+        return img;
     }
 
-    public void setRutaImagen(String rutaImagen) {
-        this.rutaImagen = rutaImagen;
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 }

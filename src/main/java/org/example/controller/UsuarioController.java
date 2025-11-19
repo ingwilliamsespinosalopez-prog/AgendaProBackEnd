@@ -30,11 +30,32 @@ public class UsuarioController {
             ctx.status(500).result("Error interno: " + e.getMessage());
         }
     }
+    public static class LoginRequest {
+        private String correo;
+        private String contrasena;
+
+        public String getCorreo() {
+            return correo;
+        }
+
+        public void setCorreo(String correo) {
+            this.correo = correo;
+        }
+
+        public String getContrasena() {
+            return contrasena;
+        }
+
+        public void setContrasena(String contrasena) {
+            this.contrasena = contrasena;
+        }
+    }
 
     public void login(Context ctx) {
         try {
-            String correo = ctx.formParam("correo");
-            String contrasena = ctx.formParam("contrasena");
+            LoginRequest loginRequest = ctx.bodyAsClass(LoginRequest.class);
+            String correo = loginRequest.getCorreo();
+            String contrasena = loginRequest.getContrasena();
 
             if (correo == null || contrasena == null) {
                 ctx.status(400).result("Faltan los datos");
@@ -51,7 +72,7 @@ public class UsuarioController {
                             "mensaje", "Login exitoso",
                             "token", token,
                             "rol", u.getIdRol(),
-                            "id", u.getId()
+                            "id", u.getIdUsuario()
                     ));
                 } else {
                     ctx.status(401).result("Contraseña incorrecta");

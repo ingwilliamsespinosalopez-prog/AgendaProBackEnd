@@ -1,24 +1,27 @@
 package org.example.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.sql.Timestamp;
+
 public class Cita {
-    private int idCita;
-    private int idCliente;
-    private int idAsesor;
-    private int idServicio;
-    private int idEstado;
-    private int idModalidad;
-    private String fechaCita;
-    private String horaCita;
-    private boolean pagado;
+
+    private Integer idCita;
+    private Integer idCliente;
+    private Integer idAsesor;
+    private Integer idServicio;
+    private Integer idEstado;
+    private Integer idModalidad;
+    private LocalDate fechaCita;
+    private LocalTime horaCita;
+    private Boolean pagado;
     private String notas;
+    private Timestamp fechaCreacion;
 
-    public Cita() {}
+    public Cita() {
+    }
 
-    public Cita(int idCita, int idCliente, int idAsesor, int idServicio, int idEstado,
-                int idModalidad, String fechaCita, String horaCita,
-                boolean pagado, String notas) {
-
-        this.idCita = idCita;
+    public Cita(Integer idCliente, Integer idAsesor, Integer idServicio, Integer idEstado, Integer idModalidad, LocalDate fechaCita, LocalTime horaCita, String notas) {
         this.idCliente = idCliente;
         this.idAsesor = idAsesor;
         this.idServicio = idServicio;
@@ -26,79 +29,78 @@ public class Cita {
         this.idModalidad = idModalidad;
         this.fechaCita = fechaCita;
         this.horaCita = horaCita;
-        this.pagado = pagado;
         this.notas = notas;
     }
 
-    public int getIdCita() {
+    public Integer getIdCita() {
         return idCita;
     }
 
-    public void setIdCita(int idCita) {
+    public void setIdCita(Integer idCita) {
         this.idCita = idCita;
     }
 
-    public int getIdCliente() {
+    public Integer getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
 
-    public int getIdAsesor() {
+    public Integer getIdAsesor() {
         return idAsesor;
     }
 
-    public void setIdAsesor(int idAsesor) {
+    public void setIdAsesor(Integer idAsesor) {
         this.idAsesor = idAsesor;
     }
 
-    public int getIdServicio() {
+    public Integer getIdServicio() {
         return idServicio;
     }
 
-    public void setIdServicio(int idServicio) {
+    public void setIdServicio(Integer idServicio) {
         this.idServicio = idServicio;
     }
 
-    public int getIdEstado() {
+    public Integer getIdEstado() {
         return idEstado;
     }
 
-    public void setIdEstado(int idEstado) {
+    public void setIdEstado(Integer idEstado) {
         this.idEstado = idEstado;
     }
 
-    public int getIdModalidad() {
+    public Integer getIdModalidad() {
         return idModalidad;
     }
 
-    public void setIdModalidad(int idModalidad) {
+    public void setIdModalidad(Integer idModalidad) {
         this.idModalidad = idModalidad;
     }
 
-    public String getFechaCita() {
+    public LocalDate getFechaCita() {
         return fechaCita;
     }
 
-    public void setFechaCita(String fechaCita) {
+    public void setFechaCita(LocalDate fechaCita) {
         this.fechaCita = fechaCita;
     }
 
-    public String getHoraCita() {
+    public LocalTime getHoraCita() {
         return horaCita;
     }
 
-    public void setHoraCita(String horaCita) {
+    public void setHoraCita(LocalTime horaCita) {
         this.horaCita = horaCita;
     }
 
-    public boolean isPagado() {
+    public Boolean getPagado() {
         return pagado;
     }
 
-    public void setPagado(boolean pagado) {
+    public void setPagado(Boolean pagado) {
         this.pagado = pagado;
     }
 
@@ -108,5 +110,13 @@ public class Cita {
 
     public void setNotas(String notas) {
         this.notas = notas;
+    }
+
+    public Timestamp getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Timestamp fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }

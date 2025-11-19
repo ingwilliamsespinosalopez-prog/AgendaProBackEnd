@@ -3,10 +3,18 @@ package org.example.repository;
 import org.example.config.DBconfig;
 import org.example.model.Usuario;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Optional;
 
 public class UsuarioRepository {
+
+    private final DataSource dataSource;
+
+    // ✔ Constructor que recibe DataSource
+    public UsuarioRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public void registrarUsuario(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO usuario (nombreUsuario, nombre, apellido, segundoApellido, rfc, curp, telefono, correo, contrasena, rutaImagen, idRol) " +
@@ -23,7 +31,7 @@ public class UsuarioRepository {
             stmt.setString(7, usuario.getTelefono());
             stmt.setString(8, usuario.getCorreo());
             stmt.setString(9, usuario.getContrasena());
-            stmt.setString(10, usuario.getRutaImagen());
+            stmt.setBytes(10, usuario.getImg());
             stmt.setInt(11, usuario.getIdRol());
 
             stmt.executeUpdate();
@@ -73,16 +81,16 @@ public class UsuarioRepository {
             stmt.setString(1, usuario.getNombre());
             stmt.setString(2, usuario.getApellido());
             stmt.setString(3, usuario.getSegundoApellido());
-            stmt.setString(4, usuario.getRutaImagen());
+            stmt.setBytes(4, usuario.getImg());
             stmt.setString(5, usuario.getTelefono());
             stmt.setString(6, usuario.getCorreo());
             stmt.setString(7, usuario.getContrasena());
             stmt.setInt(8, usuario.getIdRol());
-            stmt.setInt(9, usuario.getId());
+            stmt.setInt(9, usuario.getIdUsuario());
 
             int filas = stmt.executeUpdate();
             if (filas == 0) {
-                throw new IllegalArgumentException("No se encontró el usuario con ID " + usuario.getId());
+                throw new IllegalArgumentException("No se encontró el usuario con ID " + usuario.getIdUsuario());
             }
         }
     }
@@ -106,7 +114,7 @@ public class UsuarioRepository {
         u.setTelefono(rs.getString("telefono"));
         u.setCorreo(rs.getString("correo"));
         u.setContrasena(rs.getString("contrasena"));
-        u.setRutaImagen(rs.getString("rutaImagen"));
+        u.setImg(rs.getBytes("img"));
         u.setIdRol(rs.getInt("IdRol"));
         return u;
     }

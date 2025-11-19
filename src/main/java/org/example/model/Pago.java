@@ -1,34 +1,46 @@
 package org.example.model;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class Pago {
-    private int idPago;
-    private int idCita;
-    private double monto;
+
+    private Integer idPago;
+    private Integer idCita;
+    private BigDecimal monto;
     private String idTransaccion;
-    private int idEstadoPago;
-    private int idMetodoPago;
-    private String fechaPago;
+    private Integer idEstadoPago;
+    private Integer idMetodoPago;
+    private Timestamp fechaPago;
 
-    public int getIdPago() { return idPago; }
-    public void setIdPago(int idPago) { this.idPago = idPago; }
+    public Pago() {}
 
-    public int getIdCita() { return idCita; }
-    public void setIdCita(int idCita) { this.idCita = idCita; }
+    public Pago(Integer idCita, BigDecimal monto, String idTransaccion, Integer idEstadoPago, Integer idMetodoPago) {
+        this.idCita = idCita;
+        this.monto = monto;
+        this.idTransaccion = idTransaccion;
+        this.idEstadoPago = idEstadoPago;
+        this.idMetodoPago = idMetodoPago;
+    }
 
-    public double getMonto() { return monto; }
-    public void setMonto(double monto) { this.monto = monto; }
+    public Integer getIdPago() { return idPago; }
+    public void setIdPago(Integer idPago) { this.idPago = idPago; }
+
+    public Integer getIdCita() { return idCita; }
+    public void setIdCita(Integer idCita) { this.idCita = idCita; }
+
+    public BigDecimal getMonto() { return monto; }
+    public void setMonto(BigDecimal monto) { this.monto = monto; }
 
     public String getIdTransaccion() { return idTransaccion; }
     public void setIdTransaccion(String idTransaccion) { this.idTransaccion = idTransaccion; }
 
-    public int getIdEstadoPago() { return idEstadoPago; }
-    public void setIdEstadoPago(int idEstadoPago) { this.idEstadoPago = idEstadoPago; }
+    public Integer getIdEstadoPago() { return idEstadoPago; }
+    public void setIdEstadoPago(Integer idEstadoPago) { this.idEstadoPago = idEstadoPago; }
 
-    public int getIdMetodoPago() { return idMetodoPago; }
-    public void setIdMetodoPago(int idMetodoPago) { this.idMetodoPago = idMetodoPago; }
+    public Integer getIdMetodoPago() { return idMetodoPago; }
+    public void setIdMetodoPago(Integer idMetodoPago) { this.idMetodoPago = idMetodoPago; }
 
-    public String getFechaPago() { return fechaPago; }
-    public void setFechaPago(String fechaPago) { this.fechaPago = fechaPago; }
+    public Timestamp getFechaPago() { return fechaPago; }
+    public void setFechaPago(Timestamp fechaPago) { this.fechaPago = fechaPago; }
 }
-

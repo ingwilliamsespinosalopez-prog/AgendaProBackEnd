@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import org.example.config.JwtUtil;
 
 public class AuthMiddleware {
+
     public static Handler requireAuth = ctx -> {
         String authHeader = ctx.header("Authorization");
 
@@ -52,13 +53,12 @@ public class AuthMiddleware {
             }
 
             if (!tienePermiso) {
-                throw new ForbiddenResponse("No estas autorizado");
+                throw new ForbiddenResponse("No tienes permisos para acceder a este recurso");
             }
 
             System.out.println("Acceso permitido - Rol: " + rolUsuario);
         };
     }
-
     public static Handler requireAdmin = requireRole(3);
 
     public static Handler requireAsesor = requireRole(2);

@@ -13,7 +13,7 @@ public class JwtUtil {
     public static String generarToken(Usuario usuario) {
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
-        int id = usuario.getId();
+        int id = usuario.getIdUsuario();
         int rol = usuario.getIdRol();
 
         String token = Jwts.builder()
@@ -21,7 +21,7 @@ public class JwtUtil {
                 .claim("id", id)
                 .claim("rol", rol)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + 28800000))
                 .signWith(key)
                 .compact();
 

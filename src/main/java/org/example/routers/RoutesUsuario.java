@@ -2,50 +2,37 @@ package org.example.routers;
 
 import io.javalin.Javalin;
 import org.example.controller.UsuarioController;
-import org.example.repository.UsuarioRepository;
-import org.example.service.UsuarioService;
-import io.javalin.http.Handler;
-import io.javalin.http.UnauthorizedResponse;
-import io.jsonwebtoken.Claims;
-import org.example.config.JwtUtil;
+import org.example.config.AuthMiddleware;
 
 public class RoutesUsuario {
-    public void register(Javalin app) {
-        UsuarioRepository repository = new UsuarioRepository();
-        UsuarioService service = new UsuarioService(repository);
-        UsuarioController controller = new UsuarioController(service);
+    private final UsuarioController controller;
 
+    public RoutesUsuario(UsuarioController controller) {
+        this.controller = controller;
+    }
+
+    public void register(Javalin app) {
         app.post("/registro", controller::registrar);
         app.post("/login", controller::login);
-        app.post("/encriptar-password", controller::encriptarPassword);
         app.post("/recuperar", controller::recuperarPassword);
+        app.post("/encriptar-password", controller::encriptarPassword);
 
-        Handler requireToken = ctx -> {
-            String authHeader = ctx.header("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw new UnauthorizedResponse("Token no proporcionado");
-            }
-
-            String token = authHeader.substring(7);
-            try {
-                Claims claims = JwtUtil.validarToken(token);
-
-                Object rawId = claims.get("id");
-                int usuarioId = (rawId instanceof Integer) ? (Integer) rawId :
-                        (rawId instanceof Number) ? ((Number) rawId).intValue() :
-                                (rawId instanceof String) ? Integer.parseInt((String) rawId) : -1;
-
-
-                ctx.attribute("usuarioId", usuarioId);
-
-                System.out.println("Middleware JWT → usuarioId: " + usuarioId + ", rol: ");
-            } catch (Exception e) {
-                throw new UnauthorizedResponse("Token inválido o expirado");
-            }
-        };
-        app.before("/perfil/*", requireToken);
-
-        app.put("/perfil/{id}", controller::editarPerfil);
         app.get("/perfil/{id}", controller::obtenerPerfil);
+        app.put("/perfil/{id}", controller::editarPerfil);
+
+        app.get("/cliente/dashboard", ctx -> {
+            ctx.json(java.util.Map.of("mensaje", "Bienvenido al dashboard de cliente"));
+        });
+
+        app.get("/asesor/dashboard", ctx -> {
+            ctx.json(java.util.Map.of("mensaje", "Bienvenido al dashboard de asesor"));
+        });
+
+        app.get("/admin/dashboard", ctx -> {
+            ctx.json(java.util.Map.of("mensaje", "Bienvenido al dashboard de administrador"));
+        });
+        app.get("/admin/usuarios", ctx -> {
+            ctx.json(java.util.Map.of("mensaje", "Lista de todos los usuarios"));
+        });
     }
 }
